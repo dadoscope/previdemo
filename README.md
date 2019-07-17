@@ -10,3 +10,7 @@ Download [votos dos deputados e deputadas no texto base da reforma](https://cong
 
 Download [dados](http://dadosabertos.dataprev.gov.br/storage/f/2019-07-08T17%3A59%3A42.058Z/emitidos-competencia-052019.zip) de beneficios da Previdencia pagos em Maio-2019
 
+###Passo 3 
+
+Download dados eleitorais utilizando pacote [electionsBR](https://cran.r-project.org/web/packages/electionsBR/vignettes/introduction.html)
+
