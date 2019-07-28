@@ -23,7 +23,7 @@ election <- function(seats, counts){
 seats}
 
 
-dat <- read.csv("data/previdencia.csv")
+dat <- read.csv("../data/previdencia.csv")
 leg <- dat %>% group_by(Voto) %>% summarise(Count = n())
 house <- election(seats(510,5), leg$Count)
 
@@ -38,6 +38,6 @@ p1 <- house %>%
 	      axis.title.y=element_blank(),
 	      axis.text.y=element_blank(),
 	      plot.title = element_text(size=12) )
-png("figures/votos_camara.png", width=3200,height=1800,res=300)
+png("../figures/votos_camara.png", width=3200,height=1800,res=300)
 print(p1)
 dev.off()
