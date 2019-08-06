@@ -6,7 +6,8 @@ library(colorRamps)
 library(ggrepel)
 library(JLutils)#devtools::install_github("larmarange/JLutils")
 
-votos <- read.csv("../data/previdencia.csv")
+setwd("/home/charles/GitRepos/dadoscope/previdemo/data/eleicoes/")
+votos <- read.csv("../previdencia.csv")
 names(votos)
 pnud_muni <- abjData::pnud_muni
 br_uf_map <- abjData::br_uf_map
@@ -27,17 +28,55 @@ uf_code <- data.frame(UF = unique(votos_por_uf$UF), code = c(12,27,13,16,29,23,5
 votos_por_uf <- uf_code %>% left_join(votos_por_uf)
 uf_map <- get_brmap("State")
 uf_map <- uf_map %>% right_join(votos_por_uf, c("State" = "code"))
+df_estados <- readRDS("df_muni_map_previ_pnud.rds")
 
-palette <- colorRampPalette(c("red", "orange", "blue"))(100)
+# To plot figures about States
+
+setwd("/home/charles/GitRepos/dadoscope/previdemo/figures")
 
 p1 <- ggplot(uf_map) +
 	geom_sf(data = uf_map, aes(fill = porc)) +
         geom_sf_label(data = uf_map, aes(label = porc))+	
-	scale_fill_gradientn(colors=palette,breaks=c(0,25,50,75,100),limits=c(0,100))+
+  viridis::scale_fill_viridis(option = "magma", direction = -1) +
+  viridis::scale_color_viridis(option = "magma", direction = -1, guide=FALSE) +
 	theme_bw() +
 	labs(fill = "Votos (%)", title = "Porcentagem de deputados favoráveis à Reforma nos Estados")
 
-png("../figures/mapa_votos_previdencia.png",width=4800,height=2700,res=300)
+png("mapa_votos_previdencia.png",width=4800,height=2700,res=300)
 print(p1)
 dev.off()
 
+p1<-uf_map %>% 
+  right_join(df_estados  %>% ungroup() %>%
+               group_by(State) %>% 
+               dplyr::summarise(propsim = mean(propsim,na.rm=TRUE)), c("State" = "State")) %>%
+  ggplot() +
+  geom_sf(aes(fill = propsim)) +
+  geom_sf_label(aes(label = signif(propsim,2)))+	
+  viridis::scale_fill_viridis(option = "magma", direction = -1) +
+  viridis::scale_color_viridis(option = "magma", direction = -1, guide=FALSE) +
+  theme_bw() +
+  labs(fill = "Votos (%)", title = "Porcentagem de votos em candidatos pró-Reforma nos Estados nas eleições de 2018")
+png("mapa_proreforma_eleicoes.png",width=4800,height=2700,res=300)
+print(p1)
+dev.off()
+
+
+df_estados  %>% ungroup() %>%
+  group_by(State) %>% 
+  dplyr::summarise(propsim = mean(propsim,na.rm=TRUE))
+
+p1<-uf_map %>% 
+  right_join(df_estados  %>% ungroup() %>%
+               group_by(State) %>% 
+               dplyr::summarise(propsim = mean(propsim,na.rm=TRUE)), c("State" = "State")) %>%
+  ggplot() +
+  geom_sf(aes(fill = propsim)) +
+  geom_sf_label(aes(label = signif(propsim,2)))+	
+  viridis::scale_fill_viridis(option = "magma", direction = -1) +
+  viridis::scale_color_viridis(option = "magma", direction = -1, guide=FALSE) +
+  theme_bw() +
+  labs(fill = "Votos (%)", title = "Porcentagem de votos em candidatos pró-Reforma nos Estados nas eleições de 2018")
+png("figures/mapa_proreforma_eleicoes.png",width=4800,height=2700,res=300)
+print(p1)
+dev.off()

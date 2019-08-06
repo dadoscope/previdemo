@@ -101,7 +101,6 @@ eleicoes2018 <- eleicoes2018 %>%
 
 votos_deputados_estados_parte1 <- eleicoes2018 %>% left_join(previdencia, by = c("NOME_URNA_CANDIDATO" = "Deputado","SIGLA_PARTIDO" = "Partido","SIGLA_UF" = "UF" )) %>% filter(!is.na(Voto)) %>% mutate(Deputado = NOME_URNA_CANDIDATO)
 votos_deputados_estados_parte2 <- eleicoes2018 %>% left_join(previdencia, by = c("NOME_CANDIDATO" = "Deputado","SIGLA_PARTIDO" = "Partido","SIGLA_UF" = "UF" ))  %>% filter(NOME_CANDIDATO != NOME_URNA_CANDIDATO) %>% filter(!is.na(Voto)) %>% mutate(Deputado = NOME_CANDIDATO)
-
 votos_todos_deputados <- rbind(votos_deputados_estados_parte1, votos_deputados_estados_parte2) %>% arrange(Deputado)
 
 
